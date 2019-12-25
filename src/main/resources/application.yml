@@ -3,17 +3,10 @@ spring:
     username: IpMan
     password: Cuit135..*
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/patent?useUnicode=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
-  mvc:
-    static-path-pattern: /file/**
-  resources:
-    static-locations: file:C:\appserver\uploadImages\
-  jackson:
-    default-property-inclusion: non_null
+    url: jdbc:mysql://148.70.213.176:3306/patent?useUnicode=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
 
 mybatis:
-  mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: com.ipandroid.entity
+  mapper-locations: backEnd/handler/*.xml
 
 pagehelper:
   helperDialect: mysql
@@ -26,17 +19,6 @@ logging:
     org.springframework.web: info
     com.github.binarywang.demo.wx.pay: debug
     com.github.binarywang.wxpay: debug
-
-wx:
-  pay:
-    appId: wx2e4f0756867929e0
-    mchId: 1533229491
-    mchKey: 19210701jiandangjie028chengduked
-    mchKeySandBox: d84f69fbd5c2d0fbb87d3b1e4dcd49b0
-    subAppId: #服务商模式下的子商户公众账号ID
-    subMchId: #服务商模式下的子商户号
-    keyPath: # p12证书的位置，可以指定绝对路径，也可以指定类路径（以classpath:开头）
-    isSandBox: true
 
 number:
   image:

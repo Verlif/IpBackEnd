@@ -1,4 +1,4 @@
-package backEnd.login;
+package backEnd.handler.login;
 
 import backEnd.model.Results;
 import backEnd.model.ext.FailResults;
@@ -7,7 +7,6 @@ import backEnd.utils.JSONGet;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.config.IniSecurityManagerFactory;
-import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,9 +40,9 @@ public class LoginController {
         try {
             // 身份验证
             currentUser.login(token);
-            currentUser.execute(() -> {
+            currentUser.execute(() -> {});
 
-            });
+
             return new SusResults("登录成功");
         } catch ( UnknownAccountException uae ) {
             return new FailResults("账户不存在");
