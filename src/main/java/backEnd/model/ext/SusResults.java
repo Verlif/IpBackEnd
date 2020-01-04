@@ -22,6 +22,10 @@ public class SusResults extends Results {
         build();
         addValueList(list);
     }
+    public SusResults(String name, Object value) {
+        build();
+        addValue(name, value);
+    }
 
     private void build() {
         setCode("200");

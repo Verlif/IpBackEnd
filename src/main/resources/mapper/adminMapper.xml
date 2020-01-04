@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="backEnd.handler.admin.mapper.AdminMapper" >
+
+    <!-- 查询管理员权限 -->
+    <select id="getAdminRight" resultType="backEnd.handler.admin.model.AdminRight">
+        SELECT u.user_id AS adminId, g.group_id AS adminGroupId, r.right_url AS adminRightUrl, u.belong
+        FROM t_user u
+        LEFT JOIN t_group g
+            ON u.group_id = g.group_id
+        LEFT JOIN t_right r
+            ON g.right_id = r.right_id
+        WHERE u.user_id = #{adminId}
+    </select>
+
+    <select id="adminLogin" resultType="backEnd.handler.admin.model.Admin">
+        SELECT user_id AS userId, user_name AS userName, user_password AS userPassword
+        FROM t_user
+        WHERE user_name = #{userName} AND user_password = #{userPassword} AND group_id != 'default'
+    </select>
+
+</mapper>

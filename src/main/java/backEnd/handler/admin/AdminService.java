@@ -3,6 +3,7 @@ package backEnd.handler.admin;
 import backEnd.handler.admin.mapper.AdminMapper;
 import backEnd.handler.admin.mapper.GroupMapper;
 import backEnd.handler.admin.mapper.RightMapper;
+import backEnd.handler.admin.model.Admin;
 import backEnd.handler.admin.model.AdminRight;
 import backEnd.handler.user.UserMapper;
 import backEnd.handler.user.UserService;
@@ -24,5 +25,9 @@ public class AdminService {
 
     public AdminRight getAdminById(String adminId) {
         return adminMapper.getAdminRight(adminId);
+    }
+
+    public Admin adminLogin(String userName, String userPassword) {
+        return adminMapper.adminLogin(userName, userPassword);
     }
 }

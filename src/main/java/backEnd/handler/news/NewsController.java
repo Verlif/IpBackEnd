@@ -1,6 +1,7 @@
 package backEnd.handler.news;
 
 import backEnd.filter.RequestFilter;
+import backEnd.model.RecordLogger;
 import backEnd.model.Results;
 import backEnd.model.ext.FailResults;
 import backEnd.model.ext.SusResults;
@@ -17,6 +18,8 @@ import java.util.List;
 public class NewsController {
     @Autowired
     private NewsService newsService;
+    @Autowired
+    private RecordLogger logger;
 
     @PostMapping("news/add")
     public Results addNews(
@@ -25,6 +28,7 @@ public class NewsController {
     ) {
         News news = JSONGet.getValue(data, "news", News.class);
         if (newsService.addNews(news)) {
+            logger.record(adminId, "News-" + news.getNewsId(), "添加");
             return new SusResults();
         } else return new FailResults("添加消息失败");
     }
@@ -36,6 +40,7 @@ public class NewsController {
     ) {
         final String newsId = JSONGet.getString(data, "newsId");
         if (newsService.removeNews(newsId)) {
+            logger.record(adminId, "News-" + newsId, "删除");
             return new SusResults();
         } else return new FailResults("删除消息失败: " + newsId);
     }
@@ -47,13 +52,13 @@ public class NewsController {
     ) {
         News news = JSONGet.getValue(data, "news", News.class);
         if (newsService.updateNews(news)) {
+            logger.record(adminId, "News-" + news.getNewsId(), "修改");
             return new SusResults();
         } else return new FailResults("更新消息失败: " + news.getNewsId());
     }
 
-    @GetMapping("news/getList")
+    @PostMapping("news/getList")
     public Results getNews(
-            @RequestAttribute(RequestFilter.ADMIN_ID_IN_TOKEN) String adminId,
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "1") int size,
             @RequestBody String data

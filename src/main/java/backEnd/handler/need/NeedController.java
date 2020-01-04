@@ -1,6 +1,7 @@
 package backEnd.handler.need;
 
 import backEnd.filter.RequestFilter;
+import backEnd.model.RecordLogger;
 import backEnd.model.Results;
 import backEnd.model.ext.FailResults;
 import backEnd.model.ext.SusResults;
@@ -16,14 +17,17 @@ import java.util.List;
 public class NeedController {
     @Autowired
     private NeedService needService;
+    @Autowired
+    private RecordLogger logger;
 
-    @GetMapping("need/add")
+    @PostMapping("need/add")
     public Results addNeed(
             @RequestAttribute(RequestFilter.ADMIN_ID_IN_TOKEN) String adminId,
             @RequestBody String data
     ) {
         Need need = JSONGet.getValue(data, "need", Need.class);
         if (needService.addNeed(need)) {
+            logger.record(adminId, "Need-" + need.getNeedId(), "添加");
             return new SusResults();
         } else return new FailResults("添加需求失败");
     }
@@ -35,6 +39,7 @@ public class NeedController {
     ) {
         String needId = JSONGet.getString(data, "needId");
         if (needService.removeNeed(needId)) {
+            logger.record(adminId, "Need-" + needId, "删除");
             return new SusResults();
         } else return new FailResults("删除失败");
     }
@@ -46,13 +51,13 @@ public class NeedController {
     ) {
         Need need = JSONGet.getValue(data, "need", Need.class);
         if (needService.updateNeed(need)) {
+            logger.record(adminId, "Need-" + need.getNeedId(), "修改");
             return new SusResults();
         } else return new FailResults("更新需求失败");
     }
 
     @GetMapping("need/get")
     public Results getNeed(
-            @RequestAttribute(RequestFilter.ADMIN_ID_IN_TOKEN) String adminId,
             @RequestParam String needId
     ) {
         Need need = needService.getNeed(needId);
@@ -63,7 +68,6 @@ public class NeedController {
 
     @PostMapping("need/getList")
     public Results getNeedList(
-            @RequestAttribute(RequestFilter.ADMIN_ID_IN_TOKEN) String adminId,
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "1") int size,
             @RequestBody String data

@@ -6,7 +6,7 @@ spring:
     url: jdbc:mysql://148.70.213.176:3306/patent?useUnicode=true&useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
 
 mybatis:
-  mapper-locations: backEnd/handler/*.xml
+  mapper-locations: classpath:mapper/*.xml
 
 pagehelper:
   helperDialect: mysql
@@ -20,27 +20,9 @@ logging:
     com.github.binarywang.demo.wx.pay: debug
     com.github.binarywang.wxpay: debug
 
-number:
-  image:
-    private: 6
-    personalAC: 6
-    companyAC: 6
-  platFormFee: 500
-
 path:
-  log: C:/appserver/log/
+  log: C:/Users/Ftu/Desktop/test/backLog
 
 server:
   ip: 148.70.213.176
   useLessMem: true
-
-user:
-  default-contactCost: 3
-  timeToDefaultContact: 5
-
-fee:
-  contactFee: 联系费用
-  platformFee: 平台费用
-  patentFee: 专利费用
-  totalFee: 总费用
-  inputFee: 填入价格

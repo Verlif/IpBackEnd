@@ -1,6 +1,7 @@
 package backEnd.handler.collect;
 
 import backEnd.filter.RequestFilter;
+import backEnd.model.RecordLogger;
 import backEnd.model.Results;
 import backEnd.model.ext.FailResults;
 import backEnd.model.ext.SusResults;
@@ -16,43 +17,47 @@ import java.util.List;
 public class CollectController {
     @Autowired
     private CollectService collectService;
+    @Autowired
+    private RecordLogger logger;
 
-    @RequestMapping("collect/add")
+    @PostMapping("collect/add")
     public Results addCollect(
             @RequestAttribute(RequestFilter.ADMIN_ID_IN_TOKEN) String adminId,
             @RequestBody String data
     ) {
         Collect collect = JSONGet.getValue(data, "collect", Collect.class);
         if (collectService.addCollect(collect)) {
+            logger.record(adminId, "Collect-" + collect.getCollectId(), "添加");
             return new SusResults();
         } else return new FailResults("添加收藏失败");
     }
 
-    @RequestMapping("collect/remove")
+    @PostMapping("collect/delete")
     public Results removeCollect(
             @RequestAttribute(RequestFilter.ADMIN_ID_IN_TOKEN) String adminId,
             @RequestBody String data
     ) {
         String collectId = JSONGet.getString(data, "collectId");
         if (collectService.deleteCollect(collectId)) {
+            logger.record(adminId, "Collect-" + collectId, "删除");
             return new SusResults();
         } else return new FailResults("删除收藏失败");
     }
 
-    @RequestMapping("collect/update")
+    @PostMapping("collect/update")
     public Results updateCollect(
             @RequestAttribute(RequestFilter.ADMIN_ID_IN_TOKEN) String adminId,
             @RequestBody String data
     ) {
         Collect collect = JSONGet.getValue(data, "collect", Collect.class);
         if (collectService.updateCollect(collect)) {
+            logger.record(adminId, "Collect-" + collect.getCollectId(), "修改");
             return new SusResults();
         } else return new FailResults("更新收藏失败");
     }
 
-    @RequestMapping("collect/getList")
+    @PostMapping(value = "collect/getList")
     public Results getCollectList(
-            @RequestAttribute(RequestFilter.ADMIN_ID_IN_TOKEN) String adminId,
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "1") int size,
             @RequestBody String data
@@ -66,7 +71,6 @@ public class CollectController {
 
     @GetMapping("collect/get")
     public Results getCollect(
-            @RequestAttribute(RequestFilter.ADMIN_ID_IN_TOKEN) String adminId,
             @RequestParam String collectId
     ) {
         Collect collect = collectService.getCollect(collectId);

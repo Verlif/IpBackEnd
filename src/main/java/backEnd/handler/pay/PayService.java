@@ -1,5 +1,6 @@
 package backEnd.handler.pay;
 
+import backEnd.utils.UUIDUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ public class PayService {
     private PayMapper payMapper;
 
     public boolean addPay(Pay pay) {
+        if (pay.getPayId() == null || pay.getPayId().equals(""))
+            pay.setPayId(UUIDUtil.getUUID());
         return payMapper.insert(pay) > 0;
     }
 

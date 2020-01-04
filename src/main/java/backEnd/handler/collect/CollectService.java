@@ -1,10 +1,13 @@
 package backEnd.handler.collect;
 
+import backEnd.utils.UUIDUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,19 +18,22 @@ public class CollectService {
     private CollectMapper collectMapper;
 
     public boolean addCollect(Collect collect) {
+        if (collect.getCollectId() == null || collect.getCollectId().equals(""))
+            collect.setCollectId(UUIDUtil.getUUID());
+        collect.setCreateTime(new Timestamp(new Date().getTime()));
         return collectMapper.insert(collect) > 0;
     }
 
     public boolean deleteCollect(String collectId) {
         UpdateWrapper<Collect> wrapper = new UpdateWrapper<>();
-        Map<String, String> map = new HashMap<>();
-        map.put("collect_id", collectId);
-        wrapper.allEq(map);
+        wrapper.eq("collect_id", collectId);
         return collectMapper.delete(wrapper) > 0;
     }
 
     public boolean updateCollect(Collect collect) {
-        return collectMapper.updateById(collect) > 0;
+        UpdateWrapper<Collect> wrapper = new UpdateWrapper<>();
+        wrapper.eq("collect_id", collect.getCollectId());
+        return collectMapper.update(collect, wrapper) > 0;
     }
 
     public List<Collect> getCollectList(Collect collect) {
@@ -44,9 +50,6 @@ public class CollectService {
         QueryWrapper<Collect> wrapper = new QueryWrapper<>();
         Map<String, String> map = new HashMap<>();
         map.put("collect_type", String.valueOf(collect.getCollectType()));
-        if (collect.getCollectId() != null && !collect.getCollectId().equals("")) {
-            map.put("collect_id", collect.getCollectId());
-        }
         if (collect.getUserId() != null && !collect.getUserId().equals("")) {
             map.put("user_id", collect.getUserId());
         }

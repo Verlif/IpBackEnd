@@ -1,11 +1,14 @@
 package backEnd.handler.need;
 
 import backEnd.handler.collect.Collect;
+import backEnd.utils.UUIDUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +19,9 @@ public class NeedService {
     private NeedMapper needMapper;
 
     public boolean addNeed(Need need) {
+        if (need.getNeedId() == null || need.getNeedId().equals(""))
+            need.setNeedId(UUIDUtil.getUUID());
+        need.setCreateTime(new Timestamp(new Date().getTime()));
         return needMapper.insert(need) > 0;
     }
 
@@ -26,7 +32,9 @@ public class NeedService {
     }
 
     public boolean updateNeed(Need need) {
-        return needMapper.updateById(need) > 0;
+        UpdateWrapper<Need> wrapper = new UpdateWrapper<>();
+        wrapper.eq("need_id", need.getNeedId());
+        return needMapper.update(need, wrapper) > 0;
     }
 
     public List<Need> getNeedList(Need need) {
@@ -42,16 +50,15 @@ public class NeedService {
 
     private QueryWrapper<Need> getWrapper(Need need) {
         QueryWrapper<Need> wrapper = new QueryWrapper<>();
-        Map<String, String> map = new HashMap<>();
         if (need.getUserId() != null && !need.getUserId().equals("")) {
-            map.put("user_id", need.getNeedId());
+            wrapper.eq("user_id", need.getUserId());
         }
         if (need.getNeedName() != null && !need.getNeedName().equals("")) {
-            map.put("need_name", "%" + need.getNeedName() + "%");
+            wrapper.like("need_name", need.getNeedName());
         }
         if (need.getNeedKeywords() != null && !need.getNeedKeywords().equals("")) {
-            map.put("need_keywords", need.getNeedKeywords());
+            wrapper.like("need_keywords", need.getNeedKeywords());
         }
-        return wrapper.allEq(map);
+        return wrapper;
     }
 }

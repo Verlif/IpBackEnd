@@ -1,7 +1,9 @@
 package backEnd.filter;
 
-import backEnd.handler.admin.mapper.AdminMapper;
+import backEnd.handler.admin.AdminService;
+import backEnd.handler.admin.model.Admin;
 import backEnd.handler.admin.model.AdminRight;
+import backEnd.handler.user.User;
 import backEnd.model.ext.FailResults;
 import backEnd.utils.JwtUtils;
 import com.alibaba.fastjson.JSON;
@@ -25,10 +27,11 @@ public class RequestFilter implements Filter {
     private Logger logger;
 
     @Autowired
-    private AdminMapper adminMapper;
+    private AdminService adminService;
 
-    public RequestFilter() {
+    public RequestFilter(AdminService adminService) {
         logger = Logger.getLogger("RequestFilter");
+        this.adminService = adminService;
     }
 
     @Override
@@ -80,11 +83,12 @@ public class RequestFilter implements Filter {
      *          false-越权行为
      */
     private boolean permissionFilter(String adminId, String url) {
-
-//        AdminRight right = adminMapper.getAdminRight(adminId);
-//        return right.getAdminRightUrl().contains(url);
-
-        return true;
+        AdminRight right = adminService.getAdminById(adminId);
+        for (String u : right.getRightUrl()) {
+            if (url.contains(u))
+                return true;
+        }
+        return false;
     }
 
     /**
@@ -93,6 +97,9 @@ public class RequestFilter implements Filter {
      * @return  管辖代号
      */
     private String getBelong(String adminId) {
-        return "public";
+        AdminRight admin = adminService.getAdminById(adminId);
+        if (admin != null)
+            return admin.getBelong();
+        else return "";
     }
 }

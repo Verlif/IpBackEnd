@@ -1,5 +1,6 @@
 package backEnd.handler.user;
 
+import backEnd.utils.UUIDUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,8 @@ public class UserService {
     }
 
     public boolean addUser(User user) {
+        if (user.getUserId() == null || user.getUserId().equals(""))
+            user.setUserId(UUIDUtil.getUUID());
         return userMapper.insert(user) > 0;
     }
 }

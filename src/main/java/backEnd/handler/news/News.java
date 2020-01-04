@@ -1,6 +1,7 @@
 package backEnd.handler.news;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,8 @@ import java.sql.Timestamp;
 public class News extends model.JSONBuilder {
 
     @TableField("news_id")
-    private String newsId;      // 消息Id
+    @TableId
+    private long newsId;      // 消息Id
     @TableField("from_id")
     private String fromId;      // 消息创建者uuid
     @TableField("to_id")
@@ -27,7 +29,7 @@ public class News extends model.JSONBuilder {
     private Timestamp createTime;    // 消息发送时间
     @TableField("update_time")
     private Timestamp updateTime;    // 消息修改时间
-    @TableField("id_del")
+    @TableField("is_del")
     private int isDel;          // 消息是否被删除
 
     public boolean isRead() {

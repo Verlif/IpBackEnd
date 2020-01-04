@@ -1,5 +1,6 @@
 package backEnd.handler.patent;
 
+import backEnd.utils.UUIDUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ public class PatentService {
     private PatentMapper patentMapper;
 
     public boolean addPatent(Patent patent) {
+        if (patent.getPatentId() == null || patent.getPatentId().equals(""))
+            patent.setPatentId(UUIDUtil.getUUID());
         return patentMapper.insert(patent) > 0;
     }
 

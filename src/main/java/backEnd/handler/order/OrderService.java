@@ -1,5 +1,6 @@
 package backEnd.handler.order;
 
+import backEnd.utils.UUIDUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ public class OrderService {
     private OrderMapper orderMapper;
 
     public boolean addOrder(Order order) {
+        if (order.getOrderId() == null || order.getOrderId().equals(""))
+            order.setOrderId(UUIDUtil.getUUID());
         return orderMapper.insert(order) > 0;
     }
 
